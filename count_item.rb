@@ -71,7 +71,11 @@ doc.xpath("//h2[contains(text(),'#{star}')]").each do |h2|
    sec_i += 1
 end
 
-result = rows.reverse.join("\n")
-Pathname.new("result").mkpath
-File.write("result/#{ARGV[0]}.txt", result)
+unless rows.empty?
+   result = rows.reverse.join("\n")
+   dir = Pathname.new("result")
+   dir.mkpath
+   file = dir / "#{ARGV[0]}.txt"
+   file.write(result)
+end
 
