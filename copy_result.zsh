@@ -12,7 +12,7 @@ zparseopts -D -M -A opthash -- \
    -reset r=-reset
 
 if (( $+opthash[--help] )) || (( $# < 2 )); then
-   print -u 2 -- "usage: $0 megido_name evolution_num"
+   print -u 2 -- "usage: $0 [-r] megido_name evolution_num"
    exit 1
 fi
 
