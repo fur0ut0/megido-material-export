@@ -11,8 +11,26 @@ def open_page(url)
    end
 end
 
-def extract_items(doc)
-   sections = 1.5.step(6.0, 0.5).to_a
+def extract_items(name)
+   # TODO: fix number
+   doc = open_page("https://megido72wiki.com/index.php?#{name}")
+   number = doc.xpath("//div[@class='ie5'][2]/table/tbody/tr/td[1]").text
+   number += "R" if name.include?("（")
+
+   doc = open_page("https://megido72material.swiki.jp/index.php?#{name}")
+
+   sections = [
+      "★☆",
+      "★★",
+      "★★☆",
+      "★★★",
+      "★★★☆",
+      "★★★★",
+      "★★★★☆",
+      "★★★★★",
+      "★★★★★☆",
+      "★★★★★★",
+   ]
    sec_i = 0
 
    item_orders = File.readlines("data/item_order.txt").map do |line|
@@ -49,6 +67,7 @@ def extract_items(doc)
          item_counts[item] += count
       end
 
+      # Debug print
       puts "[#{sections[sec_i]}]"
       item_orders.each do |item|
          next unless item_counts.has_key?(item)
@@ -56,14 +75,16 @@ def extract_items(doc)
       end
       puts ""
 
-      row = item_orders.map do |item|
+      # Dump
+      cols = [name, sections[sec_i]]
+      cols += item_orders.map do |item|
          unless item_counts.has_key?(item)
             0
          else
             item_counts[item]
          end
-      end.join("\t")
-      rows.push(row)
+      end
+      rows.push(cols.join("\t"))
 
       sec_i += 1
    end
@@ -75,8 +96,7 @@ if $0 == __FILE__
       $stderr.puts "usage: #{__FILE__} megido_name"
       exit 1
    end
-   doc = open_page("https://megido72material.swiki.jp/index.php?#{ARGV[0]}")
-   rows = extract_items(doc)
+   rows = extract_items(ARGV[0])
    unless rows.empty?
       result = rows.reverse.join("\n")
       dir = Pathname.new("result")
