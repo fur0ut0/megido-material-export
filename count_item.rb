@@ -155,7 +155,7 @@ class MaterialFormatter
     end
 
     # 空でない場合はアイテムの見落としがあるので警告を出す
-    not_handled = materials.values.map(:keys).flatten.uniq
+    not_handled = materials.values.map(&:keys).flatten.uniq
     log(:warn, "Not handled material: #{not_handled.join(", ")}") unless not_handled.empty?
 
     rows.join("
