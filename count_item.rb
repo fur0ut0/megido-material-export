@@ -133,23 +133,40 @@ class MaterialFormatter
     6.0 => "★★★★★★",
   }
 
-  def initialize(order)
+  def initialize(order, logger: nil)
     @order = File.readlines(order).map { |line| line.strip }
+    @logger = logger
   end
 
   # 素材Wikiから素材数を取得する
   # @param [Hash<Numeric, Hash<String, Integer>>] materials 進化度、素材名で参照される素材数
   # @return [String] スプレッドシートに行毎にコピペする用の形式
   def format(name, number, materials)
+    materials = materials.dup
     # 進化度が高い順で出力
     EVOLUTION_LEVELS.keys.reverse.map do |level|
       row = [number, name, EVOLUTION_LEVELS[level]]
       counts = @order.map do |name|
-        materials[level][name] || 0
+        # 削除しながら取り出す
+        materials[level].delete(name) || 0
+      end
+      # 空でない場合はアイテムの見落としがあるので警告を出す
+      unless materials[level].empty?
+        log(:warn, "Not handled material: #{materials[level].keys.join(", ")}")
       end
       (row + counts).join("	")
     end.join("
 ")
+  end
+
+  private
+
+  def log(level, text)
+    if @logger
+      @logger.public_send(level, self.class.name) { text }
+    else
+      $stderr.puts "[#{level.to_s.upcase}] #{self.class.name}: #{text}"
+    end
   end
 end
 
