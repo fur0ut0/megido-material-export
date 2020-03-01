@@ -9,15 +9,18 @@ fi
 local -A opthash
 zparseopts -D -M -A opthash -- \
    -help h=-help \
-   -reset r=-reset
+   -reload r=-reload
 
 if (( $+opthash[--help] )) || (( $# < 2 )); then
-   print -u 2 -- "usage: $0 [-r] megido_name evolution_num"
+   print -u 2 -- "usage: $0 [-r] mode name"
    exit 1
 fi
 
-local result=result/$1.txt
+local mode=$1
+local name=$2
+
+local result=result/$mode/$name.txt
 if (( $+opthash[--reset] )) || [[ ! -f $result ]]; then
-   ./count_item.rb $1
+   ./get_materials.rb $mode $name
 fi
-cat $result | head -n $2 | pbcopy
+cat $result | pbcopy
