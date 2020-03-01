@@ -143,19 +143,22 @@ class MaterialFormatter
   # @return [String] スプレッドシートに行毎にコピペする用の形式
   def format(name, number, materials)
     materials = materials.dup
+
     # 進化度が高い順で出力
-    EVOLUTION_LEVELS.keys.reverse.map do |level|
+    rows = EVOLUTION_LEVELS.keys.reverse.map do |level|
       row = [number, name, EVOLUTION_LEVELS[level]]
       counts = @order.map do |name|
         # 削除しながら取り出す
         materials[level].delete(name) || 0
       end
-      # 空でない場合はアイテムの見落としがあるので警告を出す
-      unless materials[level].empty?
-        log(:warn, "Not handled material: #{materials[level].keys.join(", ")}")
-      end
       (row + counts).join("	")
-    end.join("
+    end
+
+    # 空でない場合はアイテムの見落としがあるので警告を出す
+    not_handled = materials.values.map(:keys).flatten.uniq
+    log(:warn, "Not handled material: #{not_handled.join(", ")}") unless not_handled.empty?
+
+    rows.join("
 ")
   end
 
