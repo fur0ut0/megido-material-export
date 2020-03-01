@@ -48,7 +48,7 @@ end
 class MegidoInfoExtractor
   CAPTURE_WIKI_URL = "https://megido72wiki.com/index.php"
   MATERIAL_WIKI_URL = "https://megido72material.swiki.jp/index.php"
-  NUMBER_REGEXP = /\A(.+?)(\d+)\z/
+  NUMBER_REGEXP = /\A(.+?)-?(\d+)\z/
   STAR = "☆"
   LEVEL_REGEXP = /[\d.]+/
 
