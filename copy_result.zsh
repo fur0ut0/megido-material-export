@@ -20,7 +20,7 @@ local mode=$1
 local name=$2
 
 local result=result/$mode/$name.txt
-if (( $+opthash[--reset] )) || [[ ! -f $result ]]; then
+if (( $+opthash[--reload] )) || [[ ! -f $result ]]; then
    ./get_materials.rb $mode $name
 fi
 cat $result | pbcopy
