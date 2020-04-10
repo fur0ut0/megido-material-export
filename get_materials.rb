@@ -4,6 +4,7 @@ require "optparse"
 require "open-uri"
 require "openssl"
 require "pathname"
+require "erb"
 
 require "nokogiri"
 
@@ -140,8 +141,8 @@ module Megido
 
     def initialize(megido_name)
       @name = megido_name
-      @capture_url = CAPTURE_WIKI_URL + "?" + megido_name
-      @material_url = MATERIAL_WIKI_URL + "?" + megido_name
+      @capture_url = CAPTURE_WIKI_URL + "?" + ERB::Util.url_encode(megido_name)
+      @material_url = MATERIAL_WIKI_URL + "?" + ERB::Util.url_encode(megido_name)
     end
 
     # 攻略WikiからメギドNoを取得する
@@ -279,7 +280,7 @@ end
 def fetch_page(url)
   # 文字化けを防ぐ
   # https://qiita.com/foloinfo/items/435f0409a6e33929ef3c
-  open(URI.encode(url), "r:binary", ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
+  URI.open(url, "r:binary", ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
 end
 
 # Webページ内容をパース
