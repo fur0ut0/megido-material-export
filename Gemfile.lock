@@ -1,5 +1,5 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     ast (2.4.0)
     backport (1.1.2)
@@ -61,7 +61,7 @@ DEPENDENCIES
   solargraph
 
 RUBY VERSION
-   ruby 2.6.5p114
+   ruby 2.7.1p83
 
 BUNDLED WITH
-   1.17.2
+   2.1.4

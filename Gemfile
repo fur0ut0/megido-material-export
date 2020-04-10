@@ -1,6 +1,6 @@
-ruby "2.6.5"
+ruby "2.7.1"
 
-source :rubygems
+source 'https://rubygems.org'
 
 gem "nokogiri"
 
