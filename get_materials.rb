@@ -152,7 +152,8 @@ module Megido
     #   Megido::MegidoGiftExtractor.new("アスモデウス").get_number # => "祖-001"
     def get_number(page_cache: nil)
       html = get_html(@capture_url, page_cache: page_cache)
-      number = html.xpath("//div[@class='ie5'][2]/table/tbody/tr/td").first.text
+      number = html.xpath("//div[@class='ie5'][2]/table/tbody/tr/td").first&.text
+      return nil unless number
       prefix, id = NUMBER_REGEXP.match(number).captures
       number = prefix + "-" + format("%03d", id.to_i)
       number += "R" if @name.include?("（")
@@ -229,6 +230,7 @@ module Megido
     # @return [String] スプレッドシートに行毎にコピペする用の形式
     def format_megido_gifts(name, number, gifts)
       gifts = gifts.dup
+      number ||= "?"
 
       # 進化度が高い順で出力
       rows = EVOLUTION_LEVELS.keys.reverse.map do |level|
